@@ -1,0 +1,8 @@
+<app-table
+  [data]="employees"
+  [columns]="columns"
+  [totalItems]="totalItems"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)">
+</app-table>

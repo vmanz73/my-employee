@@ -24,7 +24,7 @@ import { Router } from "@angular/router";
         const { email, password } = this.loginForm.value;
         this.authService.login(email, password).subscribe({
           next: response => {
-            this.router.navigate(['']);
+            this.router.navigate(['./employee']);
           },
           error: err => {
             this.errorMessage = err.error.message || 'Login failed';
