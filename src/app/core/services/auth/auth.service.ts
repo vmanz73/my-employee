@@ -1,5 +1,6 @@
+import { isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { Inject, inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, tap } from "rxjs";
 
@@ -10,8 +11,11 @@ import { Observable, tap } from "rxjs";
 export class AuthService {
     private tokenKey = 'token';
     private apiUrl = 'https://api.escuelajs.co/api/v1/auth';
-  
-    constructor(private router: Router, private http :HttpClient) {}
+    private isBrowser: boolean;
+
+    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private router: Router) {
+      this.isBrowser = isPlatformBrowser(this.platformId);
+    }
   
     public login(email: string, password: string): Observable<any> {
       return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
@@ -30,6 +34,8 @@ export class AuthService {
   
     public isLoggedIn(): boolean {
       const token = this.getToken();
+      console.log(token);
+      
       // Check token validity (you may want to decode and check expiration date)
       return !!token;
     }
@@ -41,7 +47,10 @@ export class AuthService {
     }
   
     public getToken(): string | null {
-      return localStorage.getItem(this.tokenKey);
+      if (this.isBrowser) {
+        return localStorage.getItem('token');
+      }
+      return null;
     }
   
     private removeToken(): void {
